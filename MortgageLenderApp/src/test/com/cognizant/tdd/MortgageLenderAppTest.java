@@ -11,14 +11,55 @@ import com.cognizant.tdd.Loan;
 
 
 public class MortgageLenderAppTest {
+	
+	static LenderAccount lender;
+	static ApplicantAccount applicant;
+	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
+		lender = new LenderAccount();
+		applicant = new ApplicantAccount();
 	}
 	
+	//1
 	@Test
 	void testCheckLenderBalance() {
-		fail("this will fail");
+		lender.setAvailableFunds(1000.00);
+		assertTrue (lender.getAvailableFunds() == 1000.00);
 	}
+		
+	//3
+	@Test
+	void testAccetpAndQualifyLoans() {
+		applicant.setDebtToIncome(24);
+		applicant.setCreditScore(880);
+		applicant.setSavings(10000);
+		lender.addLoanApp(applicant, 20000);
+		assertTrue(lender.getApprovedLoans().size() == 1);
+	}
+	
+	/*
+	//3 partial qualify 
+	@Test
+	void testAccetpAndQualifyLoansV2() {
+		applicant.setDebtToIncome(24);
+		applicant.setCreditScore(880);
+		applicant.setSavings(3000);
+		lender.addLoanApp(applicant, 20000);
+		assertTrue(lender.getApprovedLoans().size() == 1);
+		
+	}
+	
+	//3 deny 
+	@Test
+	void testAccetpAndQualifyLoansV3() {
+		applicant.setDebtToIncome(48);
+		applicant.setCreditScore(880);
+		applicant.setSavings(10000);
+		lender.addLoanApp(applicant, 20000);
+		assertTrue(lender.getApprovedLoans().size() == 0);
+		
+	}*/
 	
 	@Test 
 	void testDepositToAccount() {
