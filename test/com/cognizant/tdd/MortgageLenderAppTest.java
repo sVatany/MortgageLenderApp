@@ -61,6 +61,19 @@ public class MortgageLenderAppTest {
 		
 	}*/
 	
+	//5
+	@Test
+	void testPendingLoan() {
+		applicant.setId(0);
+		applicant.setDebtToIncome(24);
+		applicant.setCreditScore(880);
+		applicant.setSavings(10000);
+		lender.addLoanApp(applicant, 20000);
+		lender.moveFunds();
+		assertEquals(lender.getAvailableFunds(), 10000);
+		
+	}
+	
 	@Test 
 	void testDepositToAccount() {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
