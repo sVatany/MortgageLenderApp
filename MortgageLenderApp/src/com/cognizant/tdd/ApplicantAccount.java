@@ -6,6 +6,15 @@ public class ApplicantAccount {
 	public int debtToIncome;
 	public int creditScore;
 	public int savings;
+	public int loanAmountRequest;
+	public int getLoanAmountRequest() {
+		return loanAmountRequest;
+	}
+
+	public void setLoanAmountRequest(int loanAmountRequest) {
+		this.loanAmountRequest = loanAmountRequest;
+	}
+
 	public String loanStatus;
 	
 	public String getLoanStatus() {

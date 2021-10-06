@@ -2,8 +2,8 @@ package com.cognizant.tdd;
 
 public interface Loan {
 	
-	public abstract String qualifyLoan(ApplicantAccount aa);
+	public abstract String qualifyLoan(ApplicantAccount account);
 	
-	public abstract double approveLoan(ApplicantAccount aa);
+	public abstract void approveLoan(ApplicantAccount account);
 
 }

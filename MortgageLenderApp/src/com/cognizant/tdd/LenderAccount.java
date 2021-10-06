@@ -7,6 +7,7 @@ public class LenderAccount implements Loan {
 	public int id;
 	public double availableFunds;
 	public double pendingLoanAmount;
+	public List<ApplicantAccount> applications;
 	public List<ApplicantAccount> approvedLoans;
 	public List<ApplicantAccount> pendingLoans;
 	
@@ -76,25 +77,53 @@ public class LenderAccount implements Loan {
 	}
 
 
-	public String depositToAccount(double amount) {
+	public void depositToAccount(double amount) {
+		if (amount > 0) {
+			availableFunds += amount;
+		}
 		
-		return null;
 	}
 
 
 	@Override
-	public String qualifyLoan(ApplicantAccount aa) {
+	public String qualifyLoan(ApplicantAccount account) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	@Override
-	public double approveLoan(ApplicantAccount aa) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void approveLoan(ApplicantAccount account) {
+		if (account.getLoanStatus().equalsIgnoreCase("qualified") 
+			|| account.getLoanStatus().equalsIgnoreCase("partially qualified")
+			|| account.getLoanStatus().equalsIgnoreCase("on hold")) {
+			if (availableFunds >= account.getLoanAmountRequest()) {
+				account.setLoanStatus("approved");
+				applications.add(account);
+				pendingLoanAmount += account.getLoanAmountRequest();
+				availableFunds -= account.getLoanAmountRequest();
+			}
+			else {
+				account.setLoanStatus("on hold");
+				applications.add(account);
+			}
+		}
+		else {
+			System.out.println("Do not proceed");
+		}
+		
 	}
 	
+	public List<ApplicantAccount> getApplications() {
+		return applications;
+	}
+
+
+	public void setApplications(List<ApplicantAccount> applications) {
+		this.applications = applications;
+	}
+
+
 	public String viewLoans(String status) {
 		
 		return null;
