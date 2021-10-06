@@ -130,4 +130,32 @@ public class MortgageLenderAppTest {
 		assertEquals(lenderAccount.getApplicantMap().containsKey(1), false);
 	}
 
+	@Test
+	void testAcceptLoan() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount = new ApplicantAccount(1, 21, 700, 100000);
+		applicantAccount.setLoanAmountRequest(250000);
+		applicantAccount.setLoanStatus("approved");
+		lenderAccount.setPendingLoanAmount(250000);
+		lenderAccount.setAvailableFunds(50000);
+		applicantAccount.acceptLoan();
+		lenderAccount.processResponse(applicantAccount);
+		assertEquals("accepted", applicantAccount.getLoanStatus());
+		assertEquals(0, lenderAccount.getPendingLoanAmount());
+	}
+	
+	@Test
+	void testRejectLoan() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount = new ApplicantAccount(1, 21, 700, 100000);
+		applicantAccount.setLoanAmountRequest(250000);
+		applicantAccount.setLoanStatus("approved");
+		lenderAccount.setPendingLoanAmount(250000);
+		lenderAccount.setAvailableFunds(50000);
+		applicantAccount.rejectLoan();
+		lenderAccount.processResponse(applicantAccount);
+		assertEquals("rejected", applicantAccount.getLoanStatus());
+		assertEquals(0, lenderAccount.getPendingLoanAmount());
+		assertEquals(300000, lenderAccount.getAvailableFunds());
+	}
 }

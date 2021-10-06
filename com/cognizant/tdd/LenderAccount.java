@@ -141,6 +141,17 @@ public class LenderAccount implements Loan {
 		result.put(status, loanAmount);
 		return result;
 	}
+	
+	public void processResponse(ApplicantAccount account) {
+		applicantMap.put(account.getId(), account);
+		if (account.getLoanStatus().equalsIgnoreCase("accepted")) {
+			pendingLoanAmount -= account.getLoanAmountRequest();	
+		}
+		else if (account.getLoanStatus().equalsIgnoreCase("rejected")) {
+			pendingLoanAmount -= account.getLoanAmountRequest();
+			availableFunds += account.getLoanAmountRequest();
+		}
+	}
 
 
 }

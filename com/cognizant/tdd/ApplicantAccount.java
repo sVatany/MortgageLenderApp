@@ -70,6 +70,17 @@ public class ApplicantAccount {
 		this.savings = savings;
 	}
 
+	public void acceptLoan() {
+		if (loanStatus.equalsIgnoreCase("approved")) {
+			loanStatus = "accepted";
+		}
+	}
+	
+	public void rejectLoan() {
+		if (loanStatus.equalsIgnoreCase("approved")) {
+			loanStatus = "rejected";
+		}
+	}
 	@Override
 	public String toString() {
 		return "ApplicantAccount [id=" + id + ", debtToIncome=" + debtToIncome + ", creditScore=" + creditScore
