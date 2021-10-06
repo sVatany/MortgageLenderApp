@@ -1,6 +1,9 @@
 package com.cognizant.tdd;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LenderAccount implements Loan {
 	
@@ -8,7 +11,7 @@ public class LenderAccount implements Loan {
 	public double availableFunds;
 	public double pendingLoanAmount;
 	public List<ApplicantAccount> applications;
-	public List<ApplicantAccount> approvedLoans;
+	public List<ApplicantAccount> approvedLoans = new ArrayList<>();
 	public List<ApplicantAccount> pendingLoans;
 	
 	
@@ -127,6 +130,33 @@ public class LenderAccount implements Loan {
 	public String viewLoans(String status) {
 		
 		return null;
+	}
+	
+	public Map<String, Double> addLoanApp(ApplicantAccount applicant, double amount) {
+		// TODO Auto-generated method stub
+		String status;
+		double loanAmount;
+		Map<String, Double> result = new HashMap<>();
+		
+		if (applicant.getDebtToIncome() <= 36 
+				&& applicant.getSavings() / amount >= 0.25 
+				&& applicant.getCreditScore() > 620) {
+			status = "fully qualify";
+			loanAmount = amount;
+			this.approvedLoans.add(applicant);
+		}
+		else if (applicant.getDebtToIncome() <= 36  && applicant.getCreditScore() > 620) {
+			status = "partially qualify";
+			loanAmount = amount / 4;
+			this.approvedLoans.add(applicant);
+		}
+		else {
+			status = "loan rejected";
+			loanAmount = 0;
+		}
+		
+		result.put(status, loanAmount);
+		return result;
 	}
 
 
