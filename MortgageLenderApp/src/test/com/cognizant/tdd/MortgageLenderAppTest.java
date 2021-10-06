@@ -81,9 +81,9 @@ public class MortgageLenderAppTest {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
 		ApplicantAccount applicantAccount = new ApplicantAccount(1, 21, 700, 100000);
 		applicantAccount.setLoanAmountRequest(250000);
-		lenderAccount.qualifyLoan(applicantAccount);
+		applicantAccount.setLoanStatus("qualified");
 		lenderAccount.approveLoan(applicantAccount);
-		assertEquals(lenderAccount.getApplications().get(0).getLoanStatus(), "approved");
+		assertEquals(lenderAccount.getApplicantMap().get(1).getLoanStatus(), "approved");
 	}
 	
 	@Test 
@@ -91,9 +91,9 @@ public class MortgageLenderAppTest {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
 		ApplicantAccount applicantAccount = new ApplicantAccount(1, 30, 700, 50000);
 		applicantAccount.setLoanAmountRequest(250000);
-		lenderAccount.qualifyLoan(applicantAccount);
+		applicantAccount.setLoanStatus("partially qualified");
 		lenderAccount.approveLoan(applicantAccount);
-		assertEquals(lenderAccount.getApplications().get(0).getLoanStatus(), "approved");
+		assertEquals(lenderAccount.getApplicantMap().get(1).getLoanStatus(), "approved");
 	}
 	
 	@Test
@@ -101,9 +101,9 @@ public class MortgageLenderAppTest {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
 		ApplicantAccount applicantAccount = new ApplicantAccount(1, 21, 700, 100000);
 		applicantAccount.setLoanAmountRequest(200000);
-		lenderAccount.qualifyLoan(applicantAccount);
+		applicantAccount.setLoanStatus("qualified");
 		lenderAccount.approveLoan(applicantAccount);
-		assertEquals(lenderAccount.getApplications().get(0).getLoanStatus(), "on hold");
+		assertEquals(lenderAccount.getApplicantMap().get(1).getLoanStatus(), "on hold");
 	}
 	
 	@Test 
@@ -111,9 +111,9 @@ public class MortgageLenderAppTest {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
 		ApplicantAccount applicantAccount = new ApplicantAccount(1, 37, 700, 100000);
 		applicantAccount.setLoanAmountRequest(250000);
-		lenderAccount.qualifyLoan(applicantAccount);
+		applicantAccount.setLoanStatus("not qualified");
 		lenderAccount.approveLoan(applicantAccount);
-		assertEquals(lenderAccount.getApplications().get(0).getLoanStatus(), "not qualified");
+		assertEquals(lenderAccount.getApplicantMap().containsKey(1), false);
 	}
 
 }

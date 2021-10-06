@@ -94,13 +94,13 @@ public class LenderAccount implements Loan {
 			|| account.getLoanStatus().equalsIgnoreCase("on hold")) {
 			if (availableFunds >= account.getLoanAmountRequest()) {
 				account.setLoanStatus("approved");
-				//applications.add(account);
+				applicantMap.put(account.getId(), account);
 				pendingLoanAmount += account.getLoanAmountRequest();
 				availableFunds -= account.getLoanAmountRequest();
 			}
 			else {
 				account.setLoanStatus("on hold");
-				//applications.add(account);
+				applicantMap.put(account.getId(), account);
 			}
 		}
 		else {
