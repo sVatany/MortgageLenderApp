@@ -64,12 +64,13 @@ public class MortgageLenderAppTest {
 	//5
 	@Test
 	void testPendingLoan() {
+		lender.setAvailableFunds(40000.00);
 		applicant.setId(0);
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
 		lender.addLoanApp(applicant, 20000);
-		lender.moveFunds();
+		//lender.moveFunds();
 		assertEquals(lender.getAvailableFunds(), 10000);
 		
 	}
