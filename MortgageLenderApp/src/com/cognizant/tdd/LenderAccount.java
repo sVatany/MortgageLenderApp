@@ -1,35 +1,24 @@
 package com.cognizant.tdd;
 
-import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LenderAccount implements Loan {
 	
 	public int id;
 	public double availableFunds;
 	public double pendingLoanAmount;
-	public List<ApplicantAccount> applications;
-	public List<ApplicantAccount> approvedLoans;
-	public List<ApplicantAccount> pendingLoans;
-	
-	
+	public Map<Integer, ApplicantAccount> applicantMap = new HashMap<>();
 
-	public List<ApplicantAccount> getApprovedLoans() {
-		return approvedLoans;
+
+	public Map<Integer, ApplicantAccount> getApplicantMap() {
+		return applicantMap;
 	}
 
 
-	public void setApprovedLoans(List<ApplicantAccount> approvedLoans) {
-		this.approvedLoans = approvedLoans;
-	}
-
-
-	public List<ApplicantAccount> getPendingLoans() {
-		return pendingLoans;
-	}
-
-
-	public void setPendingLoans(List<ApplicantAccount> pendingLoans) {
-		this.pendingLoans = pendingLoans;
+	public void setApplicantMap(Map<Integer, ApplicantAccount> applicantMap) {
+		this.applicantMap = applicantMap;
 	}
 
 
@@ -99,28 +88,19 @@ public class LenderAccount implements Loan {
 			|| account.getLoanStatus().equalsIgnoreCase("on hold")) {
 			if (availableFunds >= account.getLoanAmountRequest()) {
 				account.setLoanStatus("approved");
-				applications.add(account);
+				//applications.add(account);
 				pendingLoanAmount += account.getLoanAmountRequest();
 				availableFunds -= account.getLoanAmountRequest();
 			}
 			else {
 				account.setLoanStatus("on hold");
-				applications.add(account);
+				//applications.add(account);
 			}
 		}
 		else {
 			System.out.println("Do not proceed");
 		}
 		
-	}
-	
-	public List<ApplicantAccount> getApplications() {
-		return applications;
-	}
-
-
-	public void setApplications(List<ApplicantAccount> applications) {
-		this.applications = applications;
 	}
 
 
