@@ -2,12 +2,12 @@ package com.cognizant.tdd;
 
 public class ApplicantAccount {
 	
-	public int id;
-	public int debtToIncome;
-	public int creditScore;
-	public int savings;
-	public double loanAmountRequest;
-	public double getLoanAmountRequest() {
+	private int id;
+	private int debtToIncome;
+	private int creditScore;
+	private int savings;
+	private double loanAmountRequest;
+	private double getLoanAmountRequest() {
 		return loanAmountRequest;
 	}
 

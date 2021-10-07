@@ -9,10 +9,10 @@ import java.util.Map;
 
 public class LenderAccount implements Loan {
 	
-	public int id;
-	public double availableFunds;
-	public double pendingLoanAmount;
-	public Map<Integer, ApplicantAccount> applicantMap = new HashMap<>();
+	private int id;
+	private double availableFunds;
+	private double pendingLoanAmount;
+	private Map<Integer, ApplicantAccount> applicantMap = new HashMap<>();
 
 	
 	
