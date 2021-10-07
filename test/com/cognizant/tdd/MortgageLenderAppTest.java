@@ -16,6 +16,7 @@ public class MortgageLenderAppTest {
 	
 	static LenderAccount lender;
 	static ApplicantAccount applicant;
+	static LocalDate myObj = LocalDate.of(2021, 10, 02);
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -90,13 +91,8 @@ public class MortgageLenderAppTest {
 		lenderAccount.addLoanApp(applicantAccount);
 		lenderAccount.approveLoan(applicantAccount);
 		applicantAccount.rejectLoan();
-		try {
-			TimeUnit.SECONDS.sleep(5);
-			lenderAccount.processResponse(applicantAccount);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		applicantAccount.setDateOfApproval(myObj);
+		lenderAccount.checkForExpiredLoans();
 		assertEquals(lenderAccount.getAvailableFunds(), 500000);
 	}
 	
