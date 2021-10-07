@@ -1,5 +1,7 @@
 package com.cognizant.tdd;
 
+import java.time.LocalDate;
+
 public class ApplicantAccount {
 	
 	private int id;
@@ -16,7 +18,7 @@ public class ApplicantAccount {
 		this.loanAmountRequest = loanAmountRequest;
 	}
 
-	public String loanStatus;
+	private String loanStatus;
 	
 	public String getLoanStatus() {
 		return loanStatus;

@@ -3,6 +3,7 @@ package test.com.cognizant.tdd;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ public class MortgageLenderAppTest {
 	
 	static LenderAccount lender;
 	static ApplicantAccount applicant;
-	static LocalDate myObj = LocalDate.of(2021, 10, 02);
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -84,18 +84,23 @@ public class MortgageLenderAppTest {
 	void testExpiredLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 500000);
 		ApplicantAccount applicantAccount = new ApplicantAccount(1, 21, 700, 100000);
-		applicantAccount.setLoanAmountRequest(250000);
 		//applicantAccount.setLoanStatus("approved");
 		//lenderAccount.setPendingLoanAmount(250000);
 		//lenderAccount.setAvailableFunds(50000);
-		lenderAccount.addLoanApp(applicantAccount);
+		lenderAccount.addLoanApp(applicantAccount, 250000);
 		lenderAccount.approveLoan(applicantAccount);
 		applicantAccount.rejectLoan();
-		applicantAccount.setDateOfApproval(myObj);
-		lenderAccount.checkForExpiredLoans();
+		try {
+			TimeUnit.SECONDS.sleep(5);
+			lenderAccount.processResponse(applicantAccount);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertEquals(lenderAccount.getAvailableFunds(), 500000);
 	}
 	
+	// tests depositToAccount(double amount) in LenderAccount
 	@Test 
 	void testDepositToAccount() {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
@@ -103,7 +108,8 @@ public class MortgageLenderAppTest {
 		assertEquals(150000, lenderAccount.getAvailableFunds());
 	}
 	
-	//cannot deposit negative amount so available funds will remain the same
+	// tests depositToAccount(double amount) in LenderAccount
+	// cannot deposit negative amount so available funds will remain the same
 	@Test
 	void testDepositNegativeAmountToAccount() {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
@@ -111,6 +117,7 @@ public class MortgageLenderAppTest {
 		assertEquals(100000, lenderAccount.getAvailableFunds());
 	}
 	
+	// tests approveLoan(ApplicantAccount account) in LenderAccount for qualified loans
 	@Test 
 	void testApproveQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -121,6 +128,7 @@ public class MortgageLenderAppTest {
 		assertEquals(lenderAccount.getApplicantMap().get(1).getLoanStatus(), "approved");
 	}
 	
+	// tests approveLoan(ApplicantAccount account) in LenderAccount for partially qualified loans
 	@Test 
 	void testApprovePartiallyQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -131,6 +139,7 @@ public class MortgageLenderAppTest {
 		assertEquals(lenderAccount.getApplicantMap().get(1).getLoanStatus(), "approved");
 	}
 	
+	// tests approveLoan(ApplicantAccount account) in LenderAccount for qualified loans that are set to on hold
 	@Test
 	void testOnHoldQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
@@ -141,6 +150,7 @@ public class MortgageLenderAppTest {
 		assertEquals(lenderAccount.getApplicantMap().get(1).getLoanStatus(), "on hold");
 	}
 	
+	//// tests approveLoan(ApplicantAccount account) in LenderAccount for unqualified loans
 	@Test 
 	void testNotQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
@@ -151,6 +161,8 @@ public class MortgageLenderAppTest {
 		assertEquals(lenderAccount.getApplicantMap().containsKey(1), false);
 	}
 
+	// tests acceptLoan() in applicantAccount 
+	// tests processResponse(ApplicantAccount account) in LenderAccount for accepted loans
 	@Test
 	void testAcceptLoan() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -165,6 +177,8 @@ public class MortgageLenderAppTest {
 		assertEquals(0, lenderAccount.getPendingLoanAmount());
 	}
 	
+	// tests rejectLoan() in ApplicantAccount 
+	// tests processResponse(ApplicantAccount account) in LenderAccount for rejected loans
 	@Test
 	void testRejectLoan() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -180,6 +194,7 @@ public class MortgageLenderAppTest {
 		assertEquals(300000, lenderAccount.getAvailableFunds());
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for qualified loans
 	@Test
 	void testFilterQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -192,6 +207,7 @@ public class MortgageLenderAppTest {
 		
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for partially qualified loans
 	@Test 
 	void testFilterPartiallyQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -203,6 +219,7 @@ public class MortgageLenderAppTest {
 		assertEquals(qualifiedLoans.get(0), applicantAccount2);
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for not qualified loans
 	@Test 
 	void testFilterNotQualifiedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -215,6 +232,7 @@ public class MortgageLenderAppTest {
 		
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for on hold loans
 	@Test
 	void testFilterOnHoldLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -228,6 +246,7 @@ public class MortgageLenderAppTest {
 		assertEquals(qualifiedLoans.get(0), applicantAccount2);
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for approved loans
 	@Test 
 	void testFilterApprovedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -241,6 +260,7 @@ public class MortgageLenderAppTest {
 		assertEquals(qualifiedLoans.get(0), applicantAccount1);
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for accepted loans
 	@Test
 	void testFilterAcceptedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
@@ -253,6 +273,7 @@ public class MortgageLenderAppTest {
 		assertEquals(qualifiedLoans.get(0), applicantAccount1);
 	}
 	
+	// tests filterLoans(String loanStatus) in LenderAccount for rejected loans
 	@Test 
 	void testFilterRejectedLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 300000);
