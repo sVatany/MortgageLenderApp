@@ -6,12 +6,12 @@ public class ApplicantAccount {
 	public int debtToIncome;
 	public int creditScore;
 	public int savings;
-	public int loanAmountRequest;
-	public int getLoanAmountRequest() {
+	public double loanAmountRequest;
+	public double getLoanAmountRequest() {
 		return loanAmountRequest;
 	}
 
-	public void setLoanAmountRequest(int loanAmountRequest) {
+	public void setLoanAmountRequest(double loanAmountRequest) {
 		this.loanAmountRequest = loanAmountRequest;
 	}
 

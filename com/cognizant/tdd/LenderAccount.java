@@ -81,13 +81,6 @@ public class LenderAccount implements Loan {
 
 
 	@Override
-	public String qualifyLoan(ApplicantAccount account) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public void approveLoan(ApplicantAccount account) {
 		if (account.getLoanStatus().equalsIgnoreCase("qualified") 
 			|| account.getLoanStatus().equalsIgnoreCase("partially qualified")
@@ -108,32 +101,35 @@ public class LenderAccount implements Loan {
 		}
 		
 	}
-
-
-	public String viewLoans(String status) {
-		
-		return null;
-	}
 	
-	public void addLoanApp(ApplicantAccount applicant) {
-		// TODO Auto-generated method stub
+	@Override
+	public void addLoanApp(ApplicantAccount applicant, double amount) {
+		String status;
+		double loanAmount;
 		
 		if (applicant.getDebtToIncome() <= 36 
-				&& applicant.getSavings() / applicant.getLoanAmountRequest() >= 0.25 
+				&& applicant.getSavings() / amount >= 0.25
 				&& applicant.getCreditScore() > 620) {
-			applicant.setLoanStatus("qualified");
-			applicant.setLoan(applicant.getLoanAmountRequest());
+			status = "qualified";
+			loanAmount = amount;
+			applicant.setLoanStatus(status);
+			applicant.setLoanAmountRequest(loanAmount);
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 		else if (applicant.getDebtToIncome() <= 36  && applicant.getCreditScore() > 620) {
-			applicant.setLoanStatus("partially qualified");
-			applicant.setLoan(applicant.getLoanAmountRequest() / 4);
+			status = "partially qualified";
+			loanAmount = amount / 4;
+			applicant.setLoanStatus(status);
+			applicant.setLoanAmountRequest(loanAmount);
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 		else {
-			applicant.setLoanStatus("loan rejected");
-			applicant.setLoan(-1);
- 		}
+			status = "not qualified";
+			loanAmount = 0;
+			applicant.setLoanStatus(status);
+			applicant.setLoanAmountRequest(loanAmount);
+			this.applicantMap.put(applicant.getId(), applicant);
+		}
 	}
 	
 	public void processResponse(ApplicantAccount account) {
@@ -145,6 +141,16 @@ public class LenderAccount implements Loan {
 			pendingLoanAmount -= account.getLoanAmountRequest();
 			availableFunds += account.getLoanAmountRequest();
 		}
+	}
+	
+	public List<ApplicantAccount> filterLoans(String loanStatus) {
+		List<ApplicantAccount> filteredApplicants = new ArrayList<>();
+		for (Integer key : applicantMap.keySet()) {
+			if (applicantMap.get(key).getLoanStatus().equalsIgnoreCase(loanStatus)) {
+				filteredApplicants.add(applicantMap.get(key));
+			}
+		}
+		return filteredApplicants;
 	}
 
 

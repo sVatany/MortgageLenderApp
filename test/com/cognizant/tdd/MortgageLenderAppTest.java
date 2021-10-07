@@ -2,6 +2,8 @@ package test.com.cognizant.tdd;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -34,8 +36,7 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
-		applicant.setLoanAmountRequest(20000);
-		lender.addLoanApp(applicant);
+		lender.addLoanApp(applicant, 20000);
 		assertTrue(lender.getApplicantMap().size() == 1);
 	}
 	
@@ -46,8 +47,7 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(3000);
-		applicant.setLoanAmountRequest(20000);
-		lender.addLoanApp(applicant);
+		lender.addLoanApp(applicant, 20000);
 		assertTrue(lender.getApplicantMap().size() == 1);
 		
 	}
@@ -58,9 +58,8 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(48);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
-		applicant.setLoanAmountRequest(20000);
-		lender.addLoanApp(applicant);
-		assertTrue(applicant.getLoanStatus().contentEquals("loan rejected"));
+		lender.addLoanApp(applicant, 20000);
+		assertTrue(applicant.getLoanStatus().contentEquals("not qualified"));
 		
 	}
 	
@@ -72,8 +71,7 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
-		applicant.setLoanAmountRequest(20000);
-		lender.addLoanApp(applicant);
+		lender.addLoanApp(applicant, 20000);
 		lender.approveLoan(applicant);
 		System.out.println(lender.getPendingLoanAmount());
 		assertTrue(lender.getPendingLoanAmount() == 20000);
@@ -162,5 +160,90 @@ public class MortgageLenderAppTest {
 		assertEquals("rejected", applicantAccount.getLoanStatus());
 		assertEquals(0, lenderAccount.getPendingLoanAmount());
 		assertEquals(300000, lenderAccount.getAvailableFunds());
+	}
+	
+	@Test
+	void testFilterQualifiedLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		ApplicantAccount applicantAccount2 = new ApplicantAccount(2, 30, 700, 50000);
+		lenderAccount.addLoanApp(applicantAccount2, 100000);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("qualified");
+		assertEquals(qualifiedLoans.get(0), applicantAccount1);
+		
+	}
+	
+	@Test 
+	void testFilterPartiallyQualifiedLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		ApplicantAccount applicantAccount2 = new ApplicantAccount(2, 30, 700, 50000);
+		lenderAccount.addLoanApp(applicantAccount2, 250000);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("partially qualified");
+		assertEquals(qualifiedLoans.get(0), applicantAccount2);
+	}
+	
+	@Test 
+	void testFilterNotQualifiedLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		ApplicantAccount applicantAccount2 = new ApplicantAccount(2, 37, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount2, 250000);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("not qualified");
+		assertEquals(qualifiedLoans.get(0), applicantAccount2);
+		
+	}
+	
+	@Test
+	void testFilterOnHoldLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		ApplicantAccount applicantAccount2 = new ApplicantAccount(2, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount2, 250000);
+		lenderAccount.approveLoan(applicantAccount1);
+		lenderAccount.approveLoan(applicantAccount2);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("on hold");
+		assertEquals(qualifiedLoans.get(0), applicantAccount2);
+	}
+	
+	@Test 
+	void testFilterApprovedLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		ApplicantAccount applicantAccount2 = new ApplicantAccount(2, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount2, 250000);
+		lenderAccount.approveLoan(applicantAccount1);
+		lenderAccount.approveLoan(applicantAccount2);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("approved");
+		assertEquals(qualifiedLoans.get(0), applicantAccount1);
+	}
+	
+	@Test
+	void testFilterAcceptedLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		lenderAccount.approveLoan(applicantAccount1);
+		applicantAccount1.acceptLoan();
+		lenderAccount.processResponse(applicantAccount1);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("accepted");
+		assertEquals(qualifiedLoans.get(0), applicantAccount1);
+	}
+	
+	@Test 
+	void testFilterRejectedLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 300000);
+		ApplicantAccount applicantAccount1 = new ApplicantAccount(1, 21, 700, 100000);
+		lenderAccount.addLoanApp(applicantAccount1, 250000);
+		lenderAccount.approveLoan(applicantAccount1);
+		applicantAccount1.rejectLoan();
+		lenderAccount.processResponse(applicantAccount1);
+		List<ApplicantAccount> qualifiedLoans = lenderAccount.filterLoans("rejected");
+		assertEquals(qualifiedLoans.get(0), applicantAccount1);
 	}
 }
