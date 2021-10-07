@@ -7,7 +7,7 @@ public class ApplicantAccount {
 	private int creditScore;
 	private int savings;
 	private double loanAmountRequest;
-	private double getLoanAmountRequest() {
+	public double getLoanAmountRequest() {
 		return loanAmountRequest;
 	}
 
