@@ -115,31 +115,25 @@ public class LenderAccount implements Loan {
 		return null;
 	}
 	
-	public Map<String, Double> addLoanApp(ApplicantAccount applicant, double amount) {
+	public void addLoanApp(ApplicantAccount applicant) {
 		// TODO Auto-generated method stub
-		String status;
-		double loanAmount;
-		Map<String, Double> result = new HashMap<>();
 		
 		if (applicant.getDebtToIncome() <= 36 
-				&& applicant.getSavings() / amount >= 0.25 
+				&& applicant.getSavings() / applicant.getLoanAmountRequest() >= 0.25 
 				&& applicant.getCreditScore() > 620) {
-			status = "fully qualify";
-			loanAmount = amount;
+			applicant.setLoanStatus("qualified");
+			applicant.setLoan(applicant.getLoanAmountRequest());
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 		else if (applicant.getDebtToIncome() <= 36  && applicant.getCreditScore() > 620) {
-			status = "partially qualify";
-			loanAmount = amount / 4;
+			applicant.setLoanStatus("partially qualified");
+			applicant.setLoan(applicant.getLoanAmountRequest() / 4);
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 		else {
-			status = "loan rejected";
-			loanAmount = 0;
-		}
-		
-		result.put(status, loanAmount);
-		return result;
+			applicant.setLoanStatus("loan rejected");
+			applicant.setLoan(-1);
+ 		}
 	}
 	
 	public void processResponse(ApplicantAccount account) {
