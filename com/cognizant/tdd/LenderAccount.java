@@ -1,7 +1,7 @@
 package com.cognizant.tdd;
 
 
-
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class LenderAccount implements Loan {
 	private double availableFunds;
 	private double pendingLoanAmount;
 	private Map<Integer, ApplicantAccount> applicantMap = new HashMap<>();
-
+	private LocalDate myObj = LocalDate.now();
 	
 	
 
@@ -114,6 +114,7 @@ public class LenderAccount implements Loan {
 			loanAmount = amount;
 			applicant.setLoanStatus(status);
 			applicant.setLoanAmountRequest(loanAmount);
+			applicant.setDateOfApproval(myObj);
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 		else if (applicant.getDebtToIncome() <= 36  && applicant.getCreditScore() > 620) {
@@ -121,6 +122,7 @@ public class LenderAccount implements Loan {
 			loanAmount = amount / 4;
 			applicant.setLoanStatus(status);
 			applicant.setLoanAmountRequest(loanAmount);
+			applicant.setDateOfApproval(myObj);
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 		else {
@@ -128,6 +130,7 @@ public class LenderAccount implements Loan {
 			loanAmount = 0;
 			applicant.setLoanStatus(status);
 			applicant.setLoanAmountRequest(loanAmount);
+			applicant.setDateOfApproval(null);
 			this.applicantMap.put(applicant.getId(), applicant);
 		}
 	}
@@ -152,6 +155,15 @@ public class LenderAccount implements Loan {
 		}
 		return filteredApplicants;
 	}
-
+	
+	public void checkForExpiredLoans() {
+		for (Entry<Integer, ApplicantAccount> applicant: this.applicantMap.entrySet()) {
+			
+			if (myObj.compareTo(applicant.getValue().getDateOfApproval()) >= 3) {
+				pendingLoanAmount -= applicant.getValue().getLoanAmountRequest();
+				availableFunds += applicant.getValue().getLoanAmountRequest();
+			}
+		}
+	}
 
 }

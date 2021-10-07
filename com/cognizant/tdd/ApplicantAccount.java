@@ -7,6 +7,7 @@ public class ApplicantAccount {
 	private int creditScore;
 	private int savings;
 	private double loanAmountRequest;
+	private LocalDate dateOfApproval;
 	public double getLoanAmountRequest() {
 		return loanAmountRequest;
 	}
@@ -81,6 +82,15 @@ public class ApplicantAccount {
 			loanStatus = "rejected";
 		}
 	}
+	
+	public LocalDate getDateOfApproval() {
+		return dateOfApproval;
+	}
+
+	public void setDateOfApproval(LocalDate dateOfApproval) {
+		this.dateOfApproval = dateOfApproval;
+	}
+	
 	@Override
 	public String toString() {
 		return "ApplicantAccount [id=" + id + ", debtToIncome=" + debtToIncome + ", creditScore=" + creditScore
