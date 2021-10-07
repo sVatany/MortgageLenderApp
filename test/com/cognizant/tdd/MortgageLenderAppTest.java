@@ -78,6 +78,28 @@ public class MortgageLenderAppTest {
 		
 	}
 	
+	//7
+	@Test
+	void testExpiredLoans() {
+		LenderAccount lenderAccount = new LenderAccount(1, 500000);
+		ApplicantAccount applicantAccount = new ApplicantAccount(1, 21, 700, 100000);
+		applicantAccount.setLoanAmountRequest(250000);
+		//applicantAccount.setLoanStatus("approved");
+		//lenderAccount.setPendingLoanAmount(250000);
+		//lenderAccount.setAvailableFunds(50000);
+		lenderAccount.addLoanApp(applicantAccount);
+		lenderAccount.approveLoan(applicantAccount);
+		applicantAccount.rejectLoan();
+		try {
+			TimeUnit.SECONDS.sleep(5);
+			lenderAccount.processResponse(applicantAccount);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(lenderAccount.getAvailableFunds(), 500000);
+	}
+	
 	@Test 
 	void testDepositToAccount() {
 		LenderAccount lenderAccount = new LenderAccount(1, 100000);
