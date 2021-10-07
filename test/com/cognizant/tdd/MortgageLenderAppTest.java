@@ -34,19 +34,21 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
-		lender.addLoanApp(applicant, 20000);
+		applicant.setLoanAmountRequest(20000);
+		lender.addLoanApp(applicant);
 		assertTrue(lender.getApplicantMap().size() == 1);
 	}
 	
-	/*
+	
 	//3 partial qualify 
 	@Test
 	void testAccetpAndQualifyLoansV2() {
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(3000);
-		lender.addLoanApp(applicant, 20000);
-		assertTrue(lender.getApprovedLoans().size() == 1);
+		applicant.setLoanAmountRequest(20000);
+		lender.addLoanApp(applicant);
+		assertTrue(lender.getApplicantMap().size() == 1);
 		
 	}
 	
@@ -56,10 +58,11 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(48);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
-		lender.addLoanApp(applicant, 20000);
-		assertTrue(lender.getApprovedLoans().size() == 0);
+		applicant.setLoanAmountRequest(20000);
+		lender.addLoanApp(applicant);
+		assertTrue(applicant.getLoanStatus().contentEquals("loan rejected"));
 		
-	}*/
+	}
 	
 	//5
 	@Test
@@ -69,9 +72,11 @@ public class MortgageLenderAppTest {
 		applicant.setDebtToIncome(24);
 		applicant.setCreditScore(880);
 		applicant.setSavings(10000);
-		lender.addLoanApp(applicant, 20000);
-		//lender.moveFunds();
-		assertEquals(lender.getAvailableFunds(), 10000);
+		applicant.setLoanAmountRequest(20000);
+		lender.addLoanApp(applicant);
+		lender.approveLoan(applicant);
+		System.out.println(lender.getPendingLoanAmount());
+		assertTrue(lender.getPendingLoanAmount() == 20000);
 		
 	}
 	
