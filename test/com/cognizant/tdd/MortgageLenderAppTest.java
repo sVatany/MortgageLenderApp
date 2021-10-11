@@ -25,6 +25,7 @@ public class MortgageLenderAppTest {
 	}
 	
 	//1
+	// test setAvailableFunds method
 	@Test
 	void testCheckLenderBalance() {
 		lender.setAvailableFunds(1000.00);
@@ -32,6 +33,7 @@ public class MortgageLenderAppTest {
 	}
 		
 	//3
+	// test addLoanApp method
 	@Test
 	void testAccetpAndQualifyLoans() {
 		applicant.setDebtToIncome(24);
@@ -43,6 +45,7 @@ public class MortgageLenderAppTest {
 	
 	
 	//3 partial qualify 
+	// test addLoanApp method
 	@Test
 	void testAccetpAndQualifyLoansV2() {
 		applicant.setDebtToIncome(24);
@@ -54,6 +57,7 @@ public class MortgageLenderAppTest {
 	}
 	
 	//3 deny 
+	// test addLoanApp method
 	@Test
 	void testAccetpAndQualifyLoansV3() {
 		applicant.setDebtToIncome(48);
@@ -65,6 +69,7 @@ public class MortgageLenderAppTest {
 	}
 	
 	//5
+	// test pending loan amount is changed after approving a loan
 	@Test
 	void testPendingLoan() {
 		lender.setAvailableFunds(40000.00);
@@ -80,6 +85,7 @@ public class MortgageLenderAppTest {
 	}
 	
 	//7
+	// test checkForExpiredLoans
 	@Test
 	void testExpiredLoans() {
 		LenderAccount lenderAccount = new LenderAccount(1, 500000);
